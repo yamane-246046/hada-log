@@ -1,0 +1,38 @@
+name: iOS Build
+
+# 手動で実行、または main ブランチにプッシュされた時に動く
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    # Appleの環境（Mac）を指定
+    runs-on: macos-latest
+
+    steps:
+      # 1. GitHubからコードをMacに持ってくる
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. MacにFlutterをインストールする
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      # 3. パッケージ（依存関係）を読み込む
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 4. iOS向けにビルドする（※証明書なしで一旦ビルドを強行する設定）
+      - name: Build iOS
+        run: flutter build ios --release --no-codesign
+
+      # 5. 完成したアプリデータをダウンロードできるようにアップロード
+      - name: Upload iOS App
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-app-data
+          path: build/ios/iphoneos/

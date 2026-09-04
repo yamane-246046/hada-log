@@ -1,0 +1,54 @@
+{
+    // IntelliSense を使用して利用可能な属性を学べます。
+    // 既存の属性の説明をホバーして表示します。
+    // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "flutter_application_1",
+            "cwd": "$Recycle.Bin\\S-1-5-21-2615871211-3605743223-2940786089-25809\\$RJLFCMP\\flutter_application_1",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "flutter_application_1 (profile mode)",
+            "cwd": "$Recycle.Bin\\S-1-5-21-2615871211-3605743223-2940786089-25809\\$RJLFCMP\\flutter_application_1",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "flutter_application_1 (release mode)",
+            "cwd": "$Recycle.Bin\\S-1-5-21-2615871211-3605743223-2940786089-25809\\$RJLFCMP\\flutter_application_1",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "flutter",
+            "cwd": "Users\\246046\\kenshu\\flutter",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "test1",
+            "cwd": "Users\\246046\\kenshu\\test1",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "test1 (profile mode)",
+            "cwd": "Users\\246046\\kenshu\\test1",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "test1 (release mode)",
+            "cwd": "Users\\246046\\kenshu\\test1",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}
