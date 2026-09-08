@@ -13,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   // 🔑 .env から GEMINI_API_KEY を安全に取得
-  final String _geminiApiKey = dotenv.env['AQ.Ab8RN6K3f573ZdeqDdBW6hMcUWA-oWdEk2qHnBZA7xvlYjnQkg'] ?? '';
+  final String _geminiApiKey = dotenv.env['GEMINI_API_KEY'] ?? '';
 
   DateTime _selectedDate = DateTime.now();
   int _selectedCondition = 3;
