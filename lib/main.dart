@@ -10,7 +10,7 @@ Future<void> main() async {
   try {
     await dotenv.load(fileName: ".env");
   } catch (e) {
-    debugPrint(".env の読み込みに失敗しました: $e");
+    debugPrint("dotenv load failed: $e");
   }
 
   runApp(const MyApp());
