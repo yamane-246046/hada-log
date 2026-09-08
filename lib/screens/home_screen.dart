@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:google_generative_ai/google_generative_ai.dart'; // Gemini SDK
+import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,11 +12,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // ⚠️ ここに取得したGemini APIキーを設定してください
-  static const String _geminiApiKey = 'YOUR_API_KEY_HERE';
+  // 🔑 .env から GEMINI_API_KEY を安全に取得
+  final String _geminiApiKey = dotenv.env['AQ.Ab8RN6K3f573ZdeqDdBW6hMcUWA-oWdEk2qHnBZA7xvlYjnQkg'] ?? '';
 
   DateTime _selectedDate = DateTime.now();
-  int _selectedCondition = 3; // 1〜5 (デフォルト: 普通 3)
+  int _selectedCondition = 3;
   
   final Set<String> _selectedSymptoms = {'乾燥'};
   
@@ -25,7 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _dinnerController = TextEditingController(text: '焼き魚定食、味噌汁');
   final TextEditingController _memoController = TextEditingController(text: '今日は少し乾燥している気がする。');
 
-  // 画像ファイル保持用変数
   XFile? _breakfastImage;
   XFile? _lunchImage;
   XFile? _dinnerImage;
@@ -47,9 +46,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   // --- Gemini AI 解析処理 ---
   Future<void> _analyzeWithGemini() async {
-    if (_geminiApiKey == 'YOUR_API_KEY_HERE' || _geminiApiKey.isEmpty) {
+    if (_geminiApiKey.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('APIキーが設定されていません。コードにGemini APIキーを入力してください。')),
+        const SnackBar(content: Text('.env ファイルに APIキーが設定されていません。')),
       );
       return;
     }
@@ -76,13 +75,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     try {
-      // モデルの設定
       final model = GenerativeModel(
         model: 'gemini-1.5-flash',
         apiKey: _geminiApiKey,
       );
 
-      // プロンプト（指示文）の組み立て
       final promptText = '''
 あなたは優秀な皮膚科医および管理栄養士です。
 以下の記録（肌状態、自覚症状、食事、メモ）と添付画像を総合的に分析し、ユーザーに対する肌アドバイスを作成してください。
@@ -106,13 +103,11 @@ class _HomeScreenState extends State<HomeScreen> {
       final List<Content> contentParts = [];
       final List<Part> parts = [TextPart(promptText)];
 
-      // 肌写真があれば追加
       if (_skinImage != null) {
         final skinImageBytes = await File(_skinImage!.path).readAsBytes();
         parts.add(DataPart('image/jpeg', skinImageBytes));
       }
 
-      // 食事写真があれば追加
       if (_breakfastImage != null) {
         final bytes = await File(_breakfastImage!.path).readAsBytes();
         parts.add(DataPart('image/jpeg', bytes));
@@ -128,22 +123,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
       contentParts.add(Content.multi(parts));
 
-      // Geminiにリクエスト送信
       final response = await model.generateContent(contentParts);
 
       if (mounted) {
-        Navigator.pop(context); // ローディング消去
+        Navigator.pop(context);
         _showResultDialog(response.text ?? '解析結果を取得できませんでした。');
       }
     } catch (e) {
       if (mounted) {
-        Navigator.pop(context); // ローディング消去
+        Navigator.pop(context);
         _showResultDialog('エラーが発生しました:\n$e');
       }
     }
   }
 
-  // AI解析結果表示ダイアログ
   void _showResultDialog(String resultText) {
     showDialog(
       context: context,
@@ -170,7 +163,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // 画像取得処理（カメラ or ギャラリー）
   Future<void> _pickImage(ImageSource source, Function(XFile) onSelected) async {
     try {
       final XFile? image = await _picker.pickImage(
@@ -192,7 +184,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // カメラ・アルバム選択モーダル
   void _showImagePickerModal(Function(XFile) onSelected) {
     showModalBottomSheet(
       context: context,
@@ -288,14 +279,12 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 日付表示
             Text(
               '${_selectedDate.year}年${_selectedDate.month}月${_selectedDate.day}日',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             
-            // 肌調子（絵文字選択）
             const Text('今日の肌調子', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Row(
@@ -323,7 +312,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 20),
 
-            // 症状の選択
             const Text('気になる症状', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Wrap(
@@ -347,7 +335,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 20),
 
-            // 食事ログ
             const Text('食事ログ', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             _buildMealInputRow('朝食', _breakfastController, _breakfastImage, (img) => _breakfastImage = img),
@@ -357,7 +344,6 @@ class _HomeScreenState extends State<HomeScreen> {
             _buildMealInputRow('夕食', _dinnerController, _dinnerImage, (img) => _dinnerImage = img),
             const SizedBox(height: 20),
 
-            // 自由メモ & 肌写真
             const Text('自由メモ・肌写真', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             TextField(
@@ -370,7 +356,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 12),
 
-            // 肌写真撮影エリア
             GestureDetector(
               onTap: () => _showImagePickerModal((img) => _skinImage = img),
               child: Container(
@@ -404,7 +389,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 24),
 
-            // 保存・解析ボタン（Gemini AI呼出に接続）
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(

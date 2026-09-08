@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'screens/home_screen.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart'; // 追加
 
 Future<void> main() async {
-  // アプリ起動前に .env を読み込む
-  await dotenv.load(fileName: ".env"); 
-  
+  // 🔑 iOSで非同期処理を行うために必須の記述
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 🔑 .env の読み込みエラーで白画面停止しないよう try-catch で保護
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    debugPrint(".env の読み込みに失敗しました: $e");
+  }
+
   runApp(const MyApp());
 }
 
@@ -18,9 +25,8 @@ class MyApp extends StatelessWidget {
       title: 'Hada-Log',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4A7C59)),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6B9AC4)),
         useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFFF7F9FC),
       ),
       home: const HomeScreen(),
     );
