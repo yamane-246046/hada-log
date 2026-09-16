@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'screens/home_screen.dart';
-
+//aaaaaaaaaaaaaaaaaa
 Future<void> main() async {
   // 🔑 iOSで非同期処理を行うために必須の記述
   WidgetsFlutterBinding.ensureInitialized();
